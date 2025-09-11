@@ -77,11 +77,16 @@ class YOLO_Pred():
         confidences_np = np.array(confidences).tolist()
 
         # NMS
-        index = cv2.dnn.NMSBoxes(boxes_np,confidences_np,0.25,0.45).flatten()
-
+        # index = cv2.dnn.NMSBoxes(boxes_np,confidences_np,0.25,0.45).flatten()
+        indexes = cv2.dnn.NMSBoxes(boxes_np, confidences_np, 0.25, 0.45)
+        if indexes is None or len(indexes) == 0 or isinstance(indexes, tuple):
+            indexes = []
+        else:
+            indexes = indexes.flatten()     
 
         # Draw the Bounding
-        for ind in index:
+        # for ind in index:
+        for ind in indexes:
             # extract bounding box
             x,y,w,h = boxes_np[ind]
             bb_conf = int(confidences_np[ind]*100)
